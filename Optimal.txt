@@ -1,0 +1,82 @@
+import java.util.Scanner;
+public class Optimal {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of frames: ");
+        int frame_len = scanner.nextInt();
+
+        System.out.print("Enter the length of the reference string: ");
+        int n = scanner.nextInt();
+
+        int[] reference = new int[n];
+        System.out.println("Enter the reference string: ");
+        for (int i = 0; i < n; i++) {
+            reference[i] = scanner.nextInt();
+        }
+
+        int fault = 0, hit = 0;
+        int ref_len = reference.length;
+        int[] buffer = new int[frame_len];
+        int[][] matrix = new int[frame_len][ref_len];
+
+        for (int i = 0; i < frame_len; i++) {
+            buffer[i] = -1;  
+        }
+
+        for (int i = 0; i < ref_len; i++) {
+
+            int search = -1;
+            for (int j = 0; j < frame_len; j++) {
+                if (buffer[j] == reference[i]) {
+                    hit++;
+                    search = 1;
+                    break;
+                }
+            }
+
+            if (search == -1) {
+                if (i < frame_len) {
+                    buffer[i] = reference[i];  
+                } else {
+                    int[] future = new int[frame_len];
+                    for (int j = 0; j < frame_len; j++) {
+                        future[j] = Integer.MAX_VALUE;
+                        for (int k = i + 1; k < ref_len; k++) {
+                            if (buffer[j] == reference[k]) {
+                                future[j] = k;
+                                break;
+                            }
+                        }
+                    }
+
+                    int replace_index = 0;
+                    for (int j = 1; j < frame_len; j++) {
+                        if (future[j] > future[replace_index]) {
+                            replace_index = j;
+                        }
+                    }
+
+                    buffer[replace_index] = reference[i];
+                }
+                fault++;
+            }
+
+           
+            for (int j = 0; j < frame_len; j++) {
+                matrix[j][i] = buffer[j];
+            }
+        }
+        System.out.println("Memory Layout:");
+        for (int i = 0; i < frame_len; i++) {
+            for (int j = 0; j < ref_len; j++) {
+                if(matrix[i][j] == -1) {
+                    System.out.print(" \t");  
+                } else {
+                    System.out.print(matrix[i][j] + "\t");
+                }
+            }
+            System.out.print("\n");
+        }
+        System.out.println("Page fault: " + fault + "\tPage hit: " + hit);
+    }
+}

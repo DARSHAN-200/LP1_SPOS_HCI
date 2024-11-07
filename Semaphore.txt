@@ -1,0 +1,90 @@
+import java.util.concurrent.Semaphore;
+import java.util.*;
+
+public class Reader_writer {
+    // Semaphores
+    static Semaphore mutex = new Semaphore(1); // Mutex = 1
+    static Semaphore wrt = new Semaphore(1);   // Write = 1
+    static int readCount = 0;                  
+    static String message = "Hello";           
+    static Scanner SC = new Scanner(System.in);
+
+    static class Reader implements Runnable {
+        
+        public void run() {
+            try {
+               
+                
+                // Acquire section 
+                mutex.acquire();
+                readCount++;
+                if (readCount == 1) {          
+                    wrt.acquire();
+                }
+                mutex.release();
+
+                System.out.println(Thread.currentThread().getName() + " has started reading.");
+                System.out.println("Thread " + Thread.currentThread().getName() + " reads: " + message);
+                Thread.sleep(1500); 
+
+                // Releasing section
+                mutex.acquire();
+                readCount--;
+                if (readCount == 0) {          
+                    wrt.release();
+                }
+                mutex.release();
+
+                System.out.println(Thread.currentThread().getName() + " has finished reading.");
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    static class Writer implements Runnable {
+        
+        public void run() {
+            try {
+               
+                wrt.acquire();
+                System.out.println(Thread.currentThread().getName() + " has started writing.");
+                message = "Good morning";
+                Thread.sleep(1500); 
+                System.out.println(Thread.currentThread().getName() + " finished writing.");
+                wrt.release();
+
+                
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        
+        Reader reader = new Reader();
+        Writer writer = new Writer();
+
+        Thread r1 = new Thread(reader);
+        r1.setName("Reader1");
+        Thread r2 = new Thread(reader);
+        r2.setName("Reader2");
+        Thread r3 = new Thread(reader);
+        r3.setName("Reader3");
+
+        Thread w1 = new Thread(writer);
+        w1.setName("Writer1");
+        Thread w2 = new Thread(writer);
+        w2.setName("Writer2");
+        Thread w3 = new Thread(writer);
+        w3.setName("Writer3");
+
+        w1.start();
+        r1.start();
+        w2.start();
+        r2.start();
+        w3.start();
+        r3.start();
+    }
+}

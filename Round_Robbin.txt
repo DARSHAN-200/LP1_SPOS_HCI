@@ -1,0 +1,63 @@
+import java.util.Scanner; 
+public class Round_Robbin { 
+    public static void main(String[] args) { 
+        Scanner sc = new Scanner(System.in); 
+         
+        System.out.print("Enter the number of processes: "); 
+        int n = sc.nextInt();   
+        int[] Pid = new int[n]; 
+        int[] AT = new int[n]; 
+        int[] BT = new int[n]; 
+        int[] CT = new int[n]; 
+        int[] TAT = new int[n]; 
+        int[] WT = new int[n]; 
+        int[] F = new int[n]; 
+        int[] tempBT = new int[n]; 
+        for (int i = 0; i < n; i++) { 
+            System.out.print("Enter arrival time for process " + (i + 1) + ": "); 
+            AT[i] = sc.nextInt(); 
+            System.out.print("Enter burst time for process " + (i + 1) + ": "); 
+            BT[i] = sc.nextInt(); 
+            Pid[i] = i + 1; 
+            F[i] = 0; 
+            tempBT[i] = BT[i]; 
+        }  
+        System.out.print("Enter the time quantum: "); 
+        int TQ = sc.nextInt(); 
+        int st = 0; 
+        int tot = 0;       
+        while (true) { 
+            boolean allCompleted = true; 
+            for (int i = 0; i < n; i++) { 
+                if (F[i] == 0) { 
+                    allCompleted = false; 
+                    if (AT[i] <= st) { 
+                        if (BT[i] > TQ) { 
+                            BT[i] -= TQ; 
+                            st += TQ; 
+                        } else { 
+                            st += BT[i]; 
+                            CT[i] = st; 
+                            TAT[i] = CT[i] - AT[i]; 
+                            WT[i] = TAT[i] - tempBT[i]; 
+                            BT[i] = 0; 
+                            F[i] = 1; 
+                            tot++; 
+                        } 
+                    } 
+                } 
+            } 
+             
+            if (allCompleted) { 
+                break; 
+            } 
+        } 
+         
+        System.out.println("\nProcess\tAT\tBT\tCT\tTAT\tWT"); 
+        for (int i = 0; i < n; i++) { 
+            System.out.println(Pid[i] + "\t" + AT[i] + "\t" + tempBT[i] + 
+"\t" + CT[i] + "\t" + TAT[i] + "\t" + WT[i]); 
+        }        
+        sc.close(); 
+    } 
+} 

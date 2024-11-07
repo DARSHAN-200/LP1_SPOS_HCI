@@ -1,0 +1,67 @@
+import java.util.*;
+
+public class First_fit{
+	
+	public static void main(String args[]) {
+		Scanner sc = new Scanner (System.in);
+		
+		//Take input the jobsize and blocksize
+		System.out.print("Enter the number of jobs: ");
+		int jobSize = sc.nextInt();
+		System.out.print("Enter the number of memory blocks:");
+		int blockSize = sc.nextInt();
+		
+		int job[] = new int[jobSize];
+        int block[] = new int[blockSize];
+        int flag[] = new int[blockSize]; 
+        int allocation[] = new int[jobSize];
+        
+        //Initialize the allocation array with -1
+        for( int i = 0 ; i < jobSize ; i++) {
+        	allocation[i] = -1;
+        	
+        }
+        
+        //input job sizes
+        System.out.println("ENter the sizes of the jobs :");
+        for ( int i = 0 ; i < jobSize ; i++) {
+        	System.out.print("Job"+(i+1)+"size: ");
+        	job[i] = sc.nextInt();
+        }
+        
+        // input block sizes
+        System.out.println("Enter the sizes of the memory blocks:");
+        for (int i = 0; i < blockSize; i++) {
+            System.out.print("Block " + (i + 1) + " size: ");
+            block[i] = sc.nextInt();
+        }
+        
+        //First Fit allocation 
+        int memoryUsed = 0 ;
+        for( int i = 0 ; i < jobSize ; i++) {
+        	for( int j = 0 ; j < blockSize ; j++) {
+        		if( job[i] <= block[j] && flag[j] == 0) {
+        			System.out.println("Job"+(i+1)+"fitted in block"+(j+1));
+        			flag[j] = 1;
+        			memoryUsed += job[i];
+        			allocation[i] = j;
+        			break;
+        			
+        		}
+        	}
+        }
+        //display job results
+        
+        System.out.println("\nJob Allocationn:");
+        for( int i = 0 ; i < jobSize; i++) {
+        	if (allocation[i] != -1) {
+        		System.out.println("Job"+(i+1)+" is allocated to block"+(allocation[i] + 1));
+        		
+        	}else {
+        		System.out.println("job"+(i+1)+"could not be allocated");
+        	}
+        }
+        //display memory used
+        System.out.println("\nTotal memory used: "+memoryUsed);
+	}
+}

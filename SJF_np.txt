@@ -1,0 +1,56 @@
+import java.util.Scanner; 
+public class SJF_np { 
+    public static void main(String[] args) { 
+        Scanner sc = new Scanner(System.in); 
+        System.out.print("Enter the number of processes: "); 
+        int n = sc.nextInt(); 
+        int[] Pid = new int[n]; 
+        int[] AT = new int[n]; 
+        int[] BT = new int[n]; 
+        int[] CT = new int[n]; 
+        int[] TAT = new int[n]; 
+        int[] WT = new int[n]; 
+        int[] F = new int[n];  // Flag array to mark completed processes 
+        int total = 0; 
+        int st = 0;  // System time 
+        System.out.println("Enter the Arrival Times: "); 
+        for (int i = 0; i < n; i++) { 
+            Pid[i] = i + 1; 
+            AT[i] = sc.nextInt(); 
+        } 
+        System.out.println("Enter the Burst Times: "); 
+        for (int i = 0; i < n; i++) { 
+            BT[i] = sc.nextInt(); 
+        } 
+        while (true) { 
+            int min = 99, c = n; 
+            if (total == n) { 
+                break; 
+            } 
+ 
+            for (int i = 0; i < n; i++) { 
+                if (AT[i] <= st && F[i] == 0 && min > BT[i]) { 
+                    min = BT[i]; 
+                    c = i; 
+                } 
+            } 
+            if (c == n) { 
+                st++; 
+            } else { 
+                CT[c] = st + BT[c]; 
+                TAT[c] = CT[c] - AT[c]; 
+                WT[c] = TAT[c] - BT[c]; 
+                F[c] = 1; 
+                total++; 
+                st = CT[c]; 
+            } 
+        } 
+        // Display the results 
+System.out.println("\nProcess\tAT\tBT\tCT\tTAT\tWT"); 
+for (int i = 0; i < n; i++) { 
+System.out.println(Pid[i] + "\t" + AT[i] + "\t" + BT[i] + "\t" + 
+CT[i] + "\t" + TAT[i] + "\t" + WT[i]); 
+} 
+sc.close(); 
+} 
+}

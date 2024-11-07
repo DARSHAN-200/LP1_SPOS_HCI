@@ -1,0 +1,60 @@
+import java.util.Scanner; 
+public class SJF_p{ 
+    public static void main(String[] args) { 
+        Scanner sc = new Scanner(System.in); 
+        System.out.print("Enter the number of processes: "); 
+        int n = sc.nextInt(); 
+        int[] Pid = new int[n]; 
+        int[] AT = new int[n]; 
+        int[] BT = new int[n]; 
+        int[] CT = new int[n]; 
+        int[] TAT = new int[n]; 
+        int[] WT = new int[n]; 
+        int[] remainingBT = new int[n]; 
+        boolean[] completed = new boolean[n]; 
+        System.out.println("Enter the Arrival Times: "); 
+        for (int i = 0; i < n; i++) { 
+            Pid[i] = i + 1; 
+            AT[i] = sc.nextInt(); 
+        } 
+        System.out.println("Enter the Burst Times: "); 
+        for (int i = 0; i < n; i++) { 
+            BT[i] = sc.nextInt(); 
+            remainingBT[i] = BT[i]; 
+        } 
+        int total = 0; 
+        int st = 0;  // System time 
+        int completedProcesses = 0; 
+        while (completedProcesses < n) { 
+            int minBT = Integer.MAX_VALUE; 
+            int c = -1; 
+            for (int i = 0; i < n; i++) { 
+                if (AT[i] <= st && !completed[i] && remainingBT[i] < 
+minBT) { 
+                    minBT = remainingBT[i]; 
+                    c = i; 
+                } 
+            } 
+            if (c == -1) { 
+                st++; 
+            } else { 
+                remainingBT[c]--; 
+                st++; 
+                if (remainingBT[c] == 0) { 
+                    CT[c] = st; 
+                    TAT[c] = CT[c] - AT[c]; 
+                    WT[c] = TAT[c] - BT[c]; 
+                    completed[c] = true; 
+                    completedProcesses++; 
+                } 
+            } 
+        } 
+        // Display the results 
+        System.out.println("\nProcess\tAT\tBT\tCT\tTAT\tWT"); 
+        for (int i = 0; i < n; i++) { 
+            System.out.println(Pid[i] + "\t" + AT[i] + "\t" + BT[i] + "\t" + 
+CT[i] + "\t" + TAT[i] + "\t" + WT[i]); 
+        } 
+        sc.close(); 
+    } 
+} 
