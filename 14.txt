@@ -1,0 +1,89 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Function to handle form submission
+def submit_registration():
+    name = name_var.get()
+    age = age_var.get()
+    gender = gender_var.get()
+    contact = contact_var.get()
+    medical_history = medical_history_text.get("1.0", tk.END).strip()
+    
+    # Collecting additional services from checkboxes
+    lab_tests = lab_tests_var.get()
+    consultation = consultation_var.get()
+    vaccination = vaccination_var.get()
+
+    # Input validation
+    if not name or not age or not gender or not contact:
+        messagebox.showerror("Input Error", "All fields are required!")
+    else:
+        services = []
+        if lab_tests:
+            services.append("Lab Tests")
+        if consultation:
+            services.append("Consultation")
+        if vaccination:
+            services.append("Vaccination")
+        
+        services_str = ", ".join(services) if services else "None"
+
+        messagebox.showinfo("Registration Successful", 
+                            f"Patient Registered Successfully!\n\n"
+                            f"Name: {name}\nAge: {age}\nGender: {gender}\nContact: {contact}\n"
+                            f"Medical History: {medical_history}\nAdditional Services: {services_str}")
+
+# Create main window
+root = tk.Tk()
+root.title("Patient Registration Form")
+root.geometry("400x600")  # Set window size
+
+# Variables for input fields
+name_var = tk.StringVar()
+age_var = tk.StringVar()
+gender_var = tk.StringVar()
+contact_var = tk.StringVar()
+
+# Checkbutton variables for additional services
+lab_tests_var = tk.BooleanVar()
+consultation_var = tk.BooleanVar()
+vaccination_var = tk.BooleanVar()
+
+# Title
+tk.Label(root, text="Patient Registration Form", font=('Arial', 16, 'bold')).pack(pady=10)
+
+# Name
+tk.Label(root, text="Name:").pack(anchor='w', padx=10, pady=5)
+tk.Entry(root, textvariable=name_var).pack(fill='x', padx=10)
+
+# Age
+tk.Label(root, text="Age:").pack(anchor='w', padx=10, pady=5)
+tk.Entry(root, textvariable=age_var).pack(fill='x', padx=10)
+
+# Gender
+tk.Label(root, text="Gender:").pack(anchor='w', padx=10, pady=5)
+gender_options = ["Male", "Female", "Other"]
+gender_var.set(gender_options[0])  # Default value
+tk.OptionMenu(root, gender_var, *gender_options).pack(fill='x', padx=10)
+
+# Contact Number
+tk.Label(root, text="Contact Number:").pack(anchor='w', padx=10, pady=5)
+tk.Entry(root, textvariable=contact_var).pack(fill='x', padx=10)
+
+# Medical History
+tk.Label(root, text="Medical History:").pack(anchor='w', padx=10, pady=5)
+medical_history_text = tk.Text(root, height=5, width=30)
+medical_history_text.pack(padx=10)
+
+# Additional Services Checkboxes
+tk.Label(root, text="Select Additional Services:").pack(anchor='w', padx=10, pady=10)
+tk.Checkbutton(root, text="Lab Tests", variable=lab_tests_var).pack(anchor='w', padx=20)
+tk.Checkbutton(root, text="Consultation", variable=consultation_var).pack(anchor='w', padx=20)
+tk.Checkbutton(root, text="Vaccination", variable=vaccination_var).pack(anchor='w', padx=20)
+
+# Submit Button
+tk.Button(root, text="Submit Registration", command=submit_registration, bg="blue", fg="white").pack(pady=20)
+
+# Start the GUI event loop
+root.mainloop()
+

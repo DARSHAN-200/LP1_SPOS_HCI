@@ -1,0 +1,39 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Function to start the main application
+def start_application():
+    # Here, you would typically open a new window or start your main application logic
+    messagebox.showinfo("Starting", "Welcome! Starting the application...")
+    # For demonstration, let's just change the label
+    welcome_label.config(text="Application is starting...")
+
+# Function to exit the application
+def exit_application():
+    if messagebox.askyesno("Exit", "Are you sure you want to exit?"):
+        root.quit()
+
+# Create the main window
+root = tk.Tk()
+root.title("Welcome Screen")
+root.geometry("400x300")  # Set window size
+
+# Title Label
+welcome_label = tk.Label(root, text="Welcome to Our Application", font=('Arial', 16, 'bold'))
+welcome_label.pack(pady=20)
+
+# Instructions Label
+instruction_label = tk.Label(root, text="Click 'Start' to continue or 'Exit' to close.")
+instruction_label.pack(pady=10)
+
+# Start Button
+start_button = tk.Button(root, text="Start", command=start_application, bg="green", fg="white")
+start_button.pack(pady=10)
+
+# Exit Button
+exit_button = tk.Button(root, text="Exit", command=exit_application, bg="red", fg="white")
+exit_button.pack(pady=10)
+
+# Start the GUI event loop
+root.mainloop()
+
